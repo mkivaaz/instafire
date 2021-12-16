@@ -2,14 +2,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap');
 
 :root{
-  --primary: #ebbcb8;
+  --primary: #a36e69;
   --secondary: #4e4e4e;
   --error: #ff4a4a;
 }
 /* base styles & title */
+
 body{
-  font-family: "Noto Serif";
-  /* font-family: "Nunito"; */
+  background-image: linear-gradient(-225deg, #e3fdf5, #ffe6fa 100%);
+  background-image: linear-gradient(to top, #a8edea 0%, #fed6e3);
+  background-attachment:fixed;
+  background-repeat: no-repeat;
+
+  font-family: 'Vibur', cursive;
+  font-family: 'Abel',sans-serif;
+  opacity: .95;
+
+  /* font-family: "Noto Serif"; */
+  font-family: "Nunito";
   color: var(--secondary);
 }
 
@@ -23,6 +33,7 @@ body{
   font-size: 1.2rem;
   letter-spacing: 2px;
   font-weight: normal;
+  margin-left: 10px;
 }
 .title h2, .title p{
   text-align: center;
@@ -74,6 +85,8 @@ label:hover{
 /* image grid style */
 .img-grid{
   margin: 20px auto;
+  padding-left: 10px ;
+  padding-right: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 40px;
