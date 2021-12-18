@@ -1,8 +1,11 @@
+import { getAuth } from 'firebase/auth';
 import React from 'react'
 import useFirestore from '../Hooks/useFirestore'
 
 function ImageGrid({setSelectedImg}) {
-    const  docs = useFirestore("images");
+    const auth = getAuth();
+    const email = auth.currentUser.email;
+    const  docs = useFirestore("images/"+email+"/files");
 
     
     // console.log(docs);

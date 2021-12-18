@@ -22,7 +22,7 @@ function UploadForm() {
 
     return (
         <form>
-            <label>
+            <label className='upload-btn'>
                 <input type="file" onChange={changeHandler}/>
                 <span>+</span>
             </label>

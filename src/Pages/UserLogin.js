@@ -1,67 +1,129 @@
 import '../CSS/userLogin.css'
-import React from 'react';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
-import { ErrorMessage, Form, Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
-
+import ReactSwitch from 'react-switch';
+import InputCus from '../Component/InputCus';
+import { useSelector, useDispatch  } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { actionCreators } from '../Redux/reduxIndex';
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 function UserLogin() {
 
-    let navigate = useNavigate();
+    const auth = getAuth();
+    const navigate = useNavigate();
+    const [toggle, setToggle] = useState(false);
+    const [validationSchema, setValidationSchema] = useState(Yup.object());
+    const [finalValues, setFinalValues] = useState(null);
+
+    const state = useSelector((state) => state);
+    const dispatch = useDispatch()
+    const {actSignUp, actLogin} = bindActionCreators(actionCreators, dispatch);
+    
+    if(auth.currentUser){
+        console.log(auth)
+
+        navigate('./home')
+    }
 
     const initialValues = {
         firstName: "",
-        lastname: "",
+        lastName: "",
         email: "",
         password: "",
     }
 
-    const validationSchema = Yup.object({
-        // Enter Schema Here
-        // firstName: Yup.string().required('Required'),
-        // lastName: Yup.string().required('Required'),
-        // email: Yup.string().email('Must be a valid email').required('Required'),
-        // password: Yup.string().required('Required')
- 
-    })
-
-    const onSubmit = () =>{
-       navigate('/home');
-        
+    const signUpSchema = {
+        firstName: Yup.string()
+                        .min(2, 'Too Short!')
+                        .max(50, 'Too Long!')
+                        .required('Required'),
+        lastName: Yup.string()
+                        .min(2, 'Too Short!')
+                        .max(50, 'Too Long!')
+                        .required('Required'),
+        email: Yup.string().email('Must be a valid email').required('Required'),
+        password: Yup.string().required('Required')
     }
 
-    const renderError = (message) =>{
-        <p className='error-msg'>{message}</p>
+    const loginSchema = {
+        email: Yup.string().email('Must be a valid email').required('Required'),
+        password: Yup.string().required('Required')
+    }
+
+    const handleToggle = () =>{
+        setToggle(!toggle)
+        if(toggle){
+            setValidationSchema(Yup.object().shape(signUpSchema))
+        }else{
+            setValidationSchema(Yup.object().shape(loginSchema))
+        }
+    }
+
+    const signIn = async (email, password) =>{
+        try{
+            const user =  await createUserWithEmailAndPassword(auth, email, password);
+            console.log(user)
+            navigate('/home')
+            actLogin(finalValues);
+        }catch(error){
+            console.log(error.message)      
+        }
+    }
+
+    const login = async (email, password) => {
+        try{
+            const user = await signInWithEmailAndPassword(auth, email, password);
+            console.log(user);
+            navigate('/home')
+        }catch (error){
+            console.log(error.message)
+        }
+    }
+
+
+
+    const onSubmit = values =>{
+        
+        const {email, password} = values; 
+        setFinalValues(values)
+        if(toggle){
+            signIn(email, password);        
+        }else{
+            login(email, password);
+        }
+        
+         
     }
 
     return (
             <div className='form-body'>
                 <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-                    {formik => (
+                    {({errors, touched}) => (
                         <Form className='form'> 
+
+                        {/*          header      */}
                             <div className='con'>
                                 <header className='header'>
-                                    <h2>Sign Up</h2>
-                                    <p>Sign up here to create an account</p>
+                                    <h2>{toggle ? "Sign Up" : "Login"}</h2>
+                                    <p>{toggle ? "Sign up here to create an account":"Login to your Account here"}</p>
+                                    <ReactSwitch id='react-switch' onChange={handleToggle} onColor="#b97dc7" offColor="#77fdd5" offHandleColor='#ddc1e4' onHandleColor='#b9fce8' uncheckedIcon={false} checkedIcon  = {false} checked ={toggle}/><br/>                                   
                                 </header><br/>
                             </div>  
 
+                        {/*           FORM         */}
                             <div className='field-set'>
-                                <span className='input-item'>
-                                    <input className='form-input' type="text" id='firstName' name='firstName' onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.firstName} placeholder=" Enter you first name here"/><br/>                            </span>
-                                <span className='input-item'>                                
-                                    <input className='form-input' type="text" id='lastname' name='lastname' onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.lastname} placeholder='Enter your last name here'/><br/>
-                                    {formik.errors.lastname && <><div>{formik.errors.lastname}</div><br/></>}
-                                </span>
-                                <span className='input-item'>                                
-                                    <input className='form-input' type="email" id='email' name='email' onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.email} placeholder='Enter your email here'/><br/>
-                                </span>
-                                <span className='input-item'>                                
-                                    <input className='form-input' type="text" id='password' name='password' onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.password} placeholder='Enter your password here'/><br/>
-                                </span>
 
-                                <button className='sign-up' type='submit'>Submit</button>
-                            </div>                      
+                                {toggle && <InputCus name={'firstName'} type={'text'} errors={errors.firstName} touched={touched.firstName} placeholder=" Enter your first name here"/> }
+                                {toggle && <InputCus name={'lastName'} type={'text'} errors={errors.lastName} touched={touched.lastName} placeholder=" Enter your last name here"/>}
+                                <InputCus name={'email'} type={'email'} errors={errors.email} touched={touched.email} placeholder=" Enter your email here"/>
+                                <InputCus name={'password'} type={'password'} errors={errors.password} touched={touched.password} placeholder=" Enter your password here"/>
+    
+                                <button className='sign-up' type='submit'>{toggle ? 'Sign Up' : 'Login'}</button>
+                            </div> 
+
                         </Form>
                     )}
                 </Formik>

@@ -5,7 +5,8 @@ import Title from '../Component/Title';
 import UploadForm from '../Component/UploadForm';
 
 function Home() {
-    const [selectedImg, setSelectedImg] = useState(null)
+    const [selectedImg, setSelectedImg] = useState(null);
+    
 
   return (
     <div className="App">
