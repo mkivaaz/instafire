@@ -8,7 +8,7 @@ import InputCus from '../Component/InputCus';
 import { useSelector, useDispatch  } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { actionCreators } from '../Redux/reduxIndex';
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, setPersistence, signInWithEmailAndPassword } from 'firebase/auth';
 
 function UserLogin() {
 
@@ -67,7 +67,7 @@ function UserLogin() {
             const user =  await createUserWithEmailAndPassword(auth, email, password);
             console.log(user)
             navigate('/home')
-            actLogin(finalValues);
+            actSignUp(finalValues);
         }catch(error){
             console.log(error.message)      
         }
@@ -77,6 +77,7 @@ function UserLogin() {
         try{
             const user = await signInWithEmailAndPassword(auth, email, password);
             console.log(user);
+            actLogin(finalValues)
             navigate('/home')
         }catch (error){
             console.log(error.message)

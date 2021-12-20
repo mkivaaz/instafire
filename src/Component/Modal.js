@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import React from 'react'
 
 function Modal({selectedImg, setSelectedImg}) {
@@ -9,9 +10,15 @@ function Modal({selectedImg, setSelectedImg}) {
     }
 
     return (
-        <div className='backdrop' onClick={handleClick}>  
-            <img src={selectedImg} alt='broken image' />
-        </div>
+        <motion.div className='backdrop' onClick={handleClick}
+            initial = {{opacity: 0}}
+            animate = {{opacity: 1}}
+        >  
+            <motion.img src={selectedImg} alt='broken image' 
+                initial = {{y: "-100vh"}}
+                animate = {{y:0}}
+            />
+        </motion.div>
     )
 }
 
