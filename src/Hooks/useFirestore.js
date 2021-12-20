@@ -1,12 +1,17 @@
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { useEffect, useState } from 'react'
 import { projectFirestore } from '../firebase/config';
 
-function useFirestore(dir) {
+function useFirestore() {
     const [docs, setDocs] = useState([]);
+    const auth = getAuth();
+    
     
     useEffect(() => {
-        const q = query(collection(projectFirestore, dir),orderBy("createdAt", "desc"));
+        onAuthStateChanged(auth, user => {
+        if(user){
+            const q = query(collection(projectFirestore, "images/"+user.email+"/files"),orderBy("createdAt", "desc"));
 
         const unsub = 
         onSnapshot(q, (snap) =>{
@@ -23,6 +28,9 @@ function useFirestore(dir) {
         });
 
         return () => unsub();
+        }
+    })
+        
     }, [collection])
 
 
