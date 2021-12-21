@@ -9,6 +9,7 @@ import { useSelector, useDispatch  } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { actionCreators } from '../Redux/reduxIndex';
 import { createUserWithEmailAndPassword, getAuth, setPersistence, signInWithEmailAndPassword } from 'firebase/auth';
+import Alert from '../Component/Alert';
 
 function UserLogin() {
 
@@ -17,6 +18,7 @@ function UserLogin() {
     const [toggle, setToggle] = useState(false);
     const [validationSchema, setValidationSchema] = useState(Yup.object());
     const [finalValues, setFinalValues] = useState(null);
+    const [message, setMessage] = useState(null);
 
     const state = useSelector((state) => state);
     const dispatch = useDispatch()
@@ -69,6 +71,7 @@ function UserLogin() {
             navigate('/home')
             actSignUp(finalValues);
         }catch(error){
+            setMessage(error.message)
             console.log(error.message)      
         }
     }
@@ -80,6 +83,7 @@ function UserLogin() {
             actLogin(finalValues)
             navigate('/home')
         }catch (error){
+            setMessage(error.message)
             console.log(error.message)
         }
     }
@@ -128,6 +132,7 @@ function UserLogin() {
                         </Form>
                     )}
                 </Formik>
+                {message && <Alert message={message} setMessage = {setMessage} />}
             </div>
             
   

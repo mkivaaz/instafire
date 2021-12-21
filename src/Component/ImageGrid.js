@@ -15,7 +15,7 @@ function ImageGrid({setSelectedImg}) {
                 
                 <motion.div className='img-wrap' key={element.id} 
                     layout
-                    whileHover={{opacity: 1}}
+                    whileHover={{filter: "none"}}
                     onClick={() => setSelectedImg(element.url.downloadURL)}>
 
                         <motion.img src = {element.url.downloadURL} alt='broken image' 

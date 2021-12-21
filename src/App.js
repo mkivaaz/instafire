@@ -9,6 +9,7 @@ import UserLogin from './Pages/UserLogin';
 function App() {
   const auth = getAuth();
   const [isLogged, setIsLogged] = useState({})
+  
 
     onAuthStateChanged(auth, (user) => {
         if(auth.currentUser !== null){
