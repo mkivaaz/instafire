@@ -164,7 +164,7 @@ padding-top: 15px;
   
 }
 
-.navbar .logout-btn{
+.btn{
     color: #252537;
 
     width: 150px;
@@ -184,4 +184,37 @@ padding-top: 15px;
     
     margin: 3px ;
     letter-spacing: 0.05em;
+}
+
+.logout{
+  order: 2;
+}
+
+.profile{
+  text-decoration: none;
+  padding-top: 1rem;
+  order: 1;
+}
+
+.profile-container{
+  margin: 20% 5% auto;
+  max-width: 100%;
+  max-height: 100%;
+  width: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:flex-start;
+  clear: both;
+}
+
+.profile-label{
+  margin-right: 5px;
+}
+
+.profile-info{
+  text-align: left;
+  float:right;
+  margin-right: auto;
+  font-size: medium;
 }

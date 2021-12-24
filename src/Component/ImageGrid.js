@@ -1,7 +1,7 @@
 import { getAuth } from 'firebase/auth';
 import React, { useEffect, useState } from 'react'
-import useFirestore from '../Hooks/useFirestore';
 import {motion} from 'framer-motion'
+import {useFirestore} from '../Hooks/useFirestore';
 
 function ImageGrid({setSelectedImg}) {
     
