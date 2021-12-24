@@ -1,12 +1,12 @@
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { useEffect, useState } from 'react'
 import { projectFirestore } from '../firebase/config';
 
+const auth = getAuth();
+
 function useFirestore() {
     const [docs, setDocs] = useState([]);
-    const auth = getAuth();
-    
     
     useEffect(() => {
         onAuthStateChanged(auth, user => {
@@ -37,4 +37,25 @@ function useFirestore() {
     return  docs 
 }
 
-export default useFirestore
+function useProfile(){
+    const [profile, setProfile] = useState({});
+
+    useEffect( () =>{
+        onAuthStateChanged(auth, async user => {
+            if(user){
+                const docRef = doc(projectFirestore, "users", user.email);
+                
+                const docSnap = await getDoc(docRef);
+                console.log("data:",docSnap)
+                if(docSnap)
+                    setProfile(docSnap.data().user);
+            }
+        })
+    },[collection])
+
+    console.log("Profile:", profile)
+    return profile;
+
+}
+
+export {useFirestore, useProfile}

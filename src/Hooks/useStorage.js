@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { addDoc, serverTimestamp, collection } from 'firebase/firestore';
+import { addDoc, serverTimestamp, collection, doc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { useEffect, useState } from 'react'
 import { projectFirestore, projectStorage } from '../firebase/config';
@@ -29,8 +29,6 @@ function useStorage(file) {
                 const storeRef = collection(projectFirestore, "images",userEmail,"files")
                 addDoc(storeRef,{url: {downloadURL}, createdAt: {timestamp}});
                 
-                // const urlRef = doc(projectFirestore, 'images',{url: downloadURL, timestamp: serverTimestamp()});
-                // addDoc(urlRef)
             })
             
         })
@@ -40,8 +38,9 @@ function useStorage(file) {
 }
 
 function storeUser(user){
-    
-    const docRef = addDoc(collection(projectFirestore, "users"),{user});
+
+    const docRef = doc(projectFirestore, "users", user.email)
+    setDoc(docRef,{user});
     console.log(docRef);
     
 }

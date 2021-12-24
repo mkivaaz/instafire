@@ -10,6 +10,7 @@ import { bindActionCreators } from 'redux';
 import { actionCreators } from '../Redux/reduxIndex';
 import { createUserWithEmailAndPassword, getAuth, setPersistence, signInWithEmailAndPassword } from 'firebase/auth';
 import Alert from '../Component/Alert';
+import { storeUser } from '../Hooks/useStorage';
 
 function UserLogin() {
 
@@ -64,23 +65,24 @@ function UserLogin() {
         }
     }
 
-    const signIn = async (email, password) =>{
+    const signIn = async (values,data) =>{
+        const {email, password} = values; 
         try{
             const user =  await createUserWithEmailAndPassword(auth, email, password);
-            console.log(user)
+            console.log("User:",values)
+            storeUser(data)
             navigate('/home')
-            actSignUp(finalValues);
         }catch(error){
             setMessage(error.message)
             console.log(error.message)      
         }
     }
 
-    const login = async (email, password) => {
+    const login = async (values) => {
+        const {email, password} = values; 
         try{
             const user = await signInWithEmailAndPassword(auth, email, password);
             console.log(user);
-            actLogin(finalValues)
             navigate('/home')
         }catch (error){
             setMessage(error.message)
@@ -91,13 +93,19 @@ function UserLogin() {
 
 
     const onSubmit = values =>{
+        const data = {
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email
+        }
         
-        const {email, password} = values; 
+        
         setFinalValues(values)
+        console.log(finalValues)
         if(toggle){
-            signIn(email, password);        
+            signIn(values, data);        
         }else{
-            login(email, password);
+            login(values);
         }
         
          
